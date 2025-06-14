@@ -1,9 +1,8 @@
-import logging
 import asyncio
-from langchain_openai import OpenAI
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
+from langchain_openai import OpenAI
 
 from config import *
 from utils import get_module_logger
@@ -52,8 +51,7 @@ async def echo_handler(message: Message) -> None:
     logger.info(f"New text: \'{text}\'")
     if text.startswith("https:") or text.startswith("http:"):
         summary = run_agent(url=text)
-        summary = summary.replace("# Ответ.\n", "")
-        logger.info(f"AI agnet summarized content: \n\'{summary}\'")
+        logger.info(f"AI agent summarized content: \n\'{summary}\'")
         await message.answer(summary)
     else:
         logger.info(f"It was a bad text: \'{text}\'")

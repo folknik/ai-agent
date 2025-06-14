@@ -1,13 +1,16 @@
 import os
+import logging
 import asyncio
 from dotenv import load_dotenv
 from langchain_openai import OpenAI
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
-from aiogram.enums import ParseMode
-from aiogram.client.default import DefaultBotProperties
+# from aiogram.enums import ParseMode
+# from aiogram.client.default import DefaultBotProperties
 
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -55,20 +58,24 @@ async def echo_handler(message: Message) -> None:
     Handler handle all message types
     """
     text = message.text
+    logger.info(f"New text: \'{text}\'")
     if text.startswith("https:") or text.startswith("http:"):
         summary = run_agent(url=text)
+        logger.info(f"AI agnet summarized content: \n\'{summary}\'")
         await message.answer(summary)
     else:
-        await message.answer("Unfortunately, no links were found.")
+        logger.info(f"It was a bad text: \'{text}\'")
+        await message.answer("Unfortunately, no link was found. Try again.")
 
 
 # Run the bot
 async def main() -> None:
     bot = Bot(
-        token=TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        token=TOKEN
+        #default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
     await dp.start_polling(bot)
+    logger.info(f"Telegram bot started...")
 
 
 if __name__ == '__main__':

@@ -63,8 +63,8 @@ async def echo_handler(message: Message) -> None:
 # Run the bot
 async def main() -> None:
     bot = Bot(token=TOKEN)
-    await dp.start_polling(bot)
     logger.info(f"Telegram bot started...")
+    await dp.start_polling(bot)
 
 
 if __name__ == '__main__':

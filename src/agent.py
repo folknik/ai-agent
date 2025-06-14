@@ -5,7 +5,7 @@ from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 
-from src.config import *
+from .config import *
 
 
 logger = logging.getLogger(__name__)

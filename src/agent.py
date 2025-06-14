@@ -6,8 +6,6 @@ from langchain_openai import OpenAI
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
-# from aiogram.enums import ParseMode
-# from aiogram.client.default import DefaultBotProperties
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +16,7 @@ TOKEN = os.getenv("BOT_TOKEN")
 
 
 user_prompt = """
-Перейди по ссылке: {url}. Прочитай статью и суммируй её суть в 2 абзацах.
+Перейди по ссылке: {url}. Прочитай статью и перескажи её суть в 3 абзацах, сохраняя важные цифры.
 """
 
 llm = OpenAI(
@@ -70,10 +68,7 @@ async def echo_handler(message: Message) -> None:
 
 # Run the bot
 async def main() -> None:
-    bot = Bot(
-        token=TOKEN
-        #default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
+    bot = Bot(token=TOKEN)
     await dp.start_polling(bot)
     logger.info(f"Telegram bot started...")
 

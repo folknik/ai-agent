@@ -6,9 +6,10 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 
 from config import *
+from utils import get_module_logger
 
 
-logger = logging.getLogger(__name__)
+logger = get_module_logger(__name__)
 
 
 llm = OpenAI(

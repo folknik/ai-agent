@@ -27,7 +27,7 @@ def run_agent(url: str) -> str:
     inputs = [
         {
             "role": "system",
-            "content": PROMPT.format(url=url)
+            "content": PROMPT_TEMPLATE.format(url=url)
         }
     ]
     response = llm.invoke(inputs)

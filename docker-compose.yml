@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python src/agent.py
+    command: python -u src/agent.py
     restart: always
     env_file:
       - variables.env

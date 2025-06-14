@@ -52,6 +52,7 @@ async def echo_handler(message: Message) -> None:
     logger.info(f"New text: \'{text}\'")
     if text.startswith("https:") or text.startswith("http:"):
         summary = run_agent(url=text)
+        summary = summary.replace("# Ответ.\n", "")
         logger.info(f"AI agnet summarized content: \n\'{summary}\'")
         await message.answer(summary)
     else:

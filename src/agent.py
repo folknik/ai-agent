@@ -1,30 +1,22 @@
-import os
 import logging
 import asyncio
-from dotenv import load_dotenv
 from langchain_openai import OpenAI
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 
+from src.config import *
+
 
 logger = logging.getLogger(__name__)
 
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-TOKEN = os.getenv("BOT_TOKEN")
-
-
-user_prompt = """
-Перейди по ссылке: {url}. Прочитай статью и перескажи её суть в 3 абзацах, сохраняя важные цифры.
-"""
 
 llm = OpenAI(
-    model="gpt-4o-mini",
+    model=LLM_MODEL,
     api_key=OPENAI_API_KEY,
-    temperature=0.1,
-    max_retries=0,
-    max_tokens=2000
+    temperature=LLM_TEMPERATURE,
+    max_tokens=LLM_MAX_TOKENS,
+    max_retries=LLM_MAX_RETRIES
 )
 
 
@@ -35,7 +27,7 @@ def run_agent(url: str) -> str:
     inputs = [
         {
             "role": "system",
-            "content": user_prompt.format(url=url)
+            "content": PROMPT.format(url=url)
         }
     ]
     response = llm.invoke(inputs)

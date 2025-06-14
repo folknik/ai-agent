@@ -4,6 +4,9 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from langchain_openai import OpenAI
 
+from urllib.request import Request, urlopen
+from bs4 import BeautifulSoup
+
 from config import *
 from utils import get_module_logger
 
@@ -23,11 +26,11 @@ llm = OpenAI(
 dp = Dispatcher()
 
 
-def run_agent(url: str) -> str:
+def run_agent(html_content: str) -> str:
     inputs = [
         {
             "role": "system",
-            "content": PROMPT_TEMPLATE.format(url=url)
+            "content": PROMPT_TEMPLATE.format(html_content=html_content)
         }
     ]
     response = llm.invoke(inputs)
@@ -47,15 +50,21 @@ async def echo_handler(message: Message) -> None:
     """
     Handler handle all message types
     """
-    text = message.text
-    logger.info(f"New text: \'{text}\'")
-    if text.startswith("https:") or text.startswith("http:"):
-        summary = run_agent(url=text)
+    url = message.text
+    logger.info(f"New url: \'{url}\'")
+    if url.startswith("https:") or url.startswith("http:"):
+
+        req = Request(url, headers=HEADERS)
+        with urlopen(req) as response:
+            html = BeautifulSoup(response.read(), 'html.parser')
+            html_content = html.get_text()
+
+        summary = run_agent(html_content=html_content)
         logger.info(f"AI agent summarized content: \n\'{summary}\'")
         await message.answer(summary)
     else:
-        logger.info(f"It was a bad text: \'{text}\'")
-        await message.answer("Unfortunately, no link was found. Try again.")
+        logger.info(f"It was the bad url: \'{url}\'")
+        await message.answer("Unfortunately, it was the bad url! Please, try again.")
 
 
 # Run the bot

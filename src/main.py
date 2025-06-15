@@ -95,9 +95,11 @@ async def main() -> None:
         func=collect_habr_content,
         trigger=CronTrigger.from_crontab("30 6 * * *")
     )
-    await scheduler.start()
+    scheduler.start()
     await dp.start_polling(bot)
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    loop.create_task(main())
+    loop.run_forever()

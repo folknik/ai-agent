@@ -19,6 +19,11 @@ class PostgresDB:
             'dbname': 'users'
         }
 
+    def _execute_query(self, query: str) -> None:
+        with closing(psycopg2.connect(**self.conn_params)) as pg_conn, closing(pg_conn.cursor()) as pg_cursor:
+            pg_cursor.execute(query)
+            pg_conn.commit()
+
     def _execute_batch(self, query: str, records: List[Tuple]) -> None:
         with closing(psycopg2.connect(**self.conn_params)) as pg_conn, closing(pg_conn.cursor()) as pg_cursor:
             extras.execute_batch(cur=pg_cursor, sql=query, argslist=records)
@@ -60,12 +65,8 @@ class PostgresDB:
                     SELECT id FROM users.chats WHERE chat_id = {chat_id}
                 );
         """
-        records = [
-            (chat_id, user_id)
-        ]
-        self._execute_batch(
-            query=query,
-            records=records
+        self._execute_query(
+            query=query.format(chat_id=chat_id, user_id=user_id)
         )
         logger.info("User_data successfully inserted into db.")
 

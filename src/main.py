@@ -16,7 +16,7 @@ from utils.data import get_content_from_url, get_articles_from_last_day
 
 logger = get_logger(__name__)
 
-scheduler = AsyncIOScheduler(timezone="UTC")
+
 bot = Bot(token=TOKEN)
 
 llm = OpenAI(
@@ -91,6 +91,7 @@ async def collect_habr_content():
 
 # Run the bot
 async def main() -> None:
+    scheduler = AsyncIOScheduler(timezone="UTC")
     scheduler.add_job(
         func=collect_habr_content,
         trigger=CronTrigger.from_crontab("30 6 * * *")

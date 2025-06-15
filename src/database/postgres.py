@@ -71,11 +71,11 @@ class PostgresDB:
         )
         logger.info("Chat_id successfully inserted into db.")
 
-    def get_all_chats(self) -> List[int]:
+    def get_all_chats(self) -> List[Tuple[int]]:
         query = "SELECT DISTINCT chat_id FROM users.chats;"
         return self._fetchall(query=query)
 
-    def get_all_links_to_article(self) -> List[str]:
+    def get_all_links_to_article(self) -> List[Tuple[str]]:
         query = "SELECT DISTINCT link FROM users.articles;"
         return self._fetchall(query=query)
 

@@ -76,10 +76,12 @@ async def echo_handler(message: Message) -> None:
 
 async def collect_habr_content():
     chats = db.get_all_chats()
+    chats = [chat[0] for chat in chats]
     logger.info(f'Available chat list: {chats}')
     if len(chats) > 0:
         articles = get_articles_from_last_day()
         links_to_article = db.get_all_links_to_article()
+        links_to_article = [link[0] for link in links_to_article]
         for article in articles:
             if article['link'] not in links_to_article:
                 html_content = get_content_from_url(url=article['link'])

@@ -2,11 +2,13 @@ import asyncio
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
+from aiogram.types.user import User
 from langchain_openai import OpenAI
 
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 
+from database.postgres import PostgresDB
 from settings.config import *
 from utils.base import get_logger
 
@@ -22,6 +24,7 @@ llm = OpenAI(
     max_retries=LLM_MAX_RETRIES
 )
 
+db = PostgresDB()
 
 dp = Dispatcher()
 
@@ -46,11 +49,25 @@ def get_summary_from_url(url: str) -> str:
     return summary
 
 
+def get_user_data(user: User, url: str) -> dict:
+    return {
+        'user_id': user.id,
+        'is_bot': user.is_bot,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'username': user.username,
+        'is_premium': user.is_premium,
+        'url': url
+    }
+
+
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
+    user_id = message.from_user.id
+    logger.info(f"New user with user_id \'{user_id}\' request the bot")
     await message.answer(f"Hello, I'm your AI assistant! Send me a link to the article and I'll send you a summary.")
 
 
@@ -60,11 +77,12 @@ async def echo_handler(message: Message) -> None:
     Handler handle all message types
     """
     url = message.text
-    user_id = message.from_user.id
-    logger.info(f"User with ser_id \'{user_id}\' sent new url: \'{url}\'")
+    logger.info(f"User with user_id \'{message.from_user.id}\' sent new url: \'{url}\'")
     if url.startswith("https:") or url.startswith("http:"):
         summary = get_summary_from_url(url=url)
         logger.info(f"AI agent summarized content: \n\'{summary}\'")
+        user_data = get_user_data(user=message.from_user, url=url)
+        db.insert_user_data(user_data=user_data)
         await message.answer(summary)
     else:
         logger.info(f"It was the bad url: \'{url}\'")

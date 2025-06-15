@@ -15,11 +15,7 @@ LLM_TEMPERATURE = 0.1
 LLM_MAX_TOKENS = 500
 LLM_MAX_RETRIES = 0
 
-
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
-}
-
+HABR_URL = f'https://habr.com/ru/hubs/artificial_intelligence/articles/'
 
 PROMPT_TEMPLATE = """
 Роль:

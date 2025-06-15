@@ -90,7 +90,7 @@ async def collect_habr_content():
 
 
 # Run the bot
-async def main() -> None:
+async def amain() -> None:
     scheduler = AsyncIOScheduler(timezone="UTC")
     scheduler.add_job(
         func=collect_habr_content,
@@ -101,6 +101,7 @@ async def main() -> None:
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.create_task(main())
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(amain())
     loop.run_forever()

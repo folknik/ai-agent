@@ -83,7 +83,7 @@ class PostgresDB:
         query = """
             INSERT INTO users.articles 
                 (name, link, published_datetime) 
-            SELECT '{name}', '{link}', {published_datetime}
+            SELECT '{name}', '{link}', '{published_datetime}'
             WHERE
                 NOT EXISTS (
                     SELECT id FROM users.chats WHERE link = '{link}'

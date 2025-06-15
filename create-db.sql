@@ -1,9 +1,9 @@
-create database postgres;
+create database if not exists postgres;
 \connect postgres;
 
-create schema users;
+create schema if not exists users;
 
-create table users.user_requests (
+create table if not exists users.user_requests (
     id              serial primary key,
     user_id         int8 not null,
     is_bot          boolean not null,

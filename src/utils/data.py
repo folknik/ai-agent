@@ -46,15 +46,12 @@ def get_articles_from_last_day() -> List[dict]:
             {
                 'name': name,
                 'link': link,
-                'dt': datetime.fromisoformat(dt).replace(tzinfo=timezone.utc)
+                'dt': datetime.fromisoformat(dt).replace(tzinfo=None)
             }
         )
     start = datetime.combine(
         date=datetime.now().date() - timedelta(days=1),
         time=datetime.min.time()
     )
-    end = datetime.combine(
-        date=datetime.now().date(),
-        time=datetime.min.time()
-    ) - timedelta(seconds=1)
+    end = datetime.now()
     return [art for art in articles if start <= art['dt'] < end]

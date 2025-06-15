@@ -5,7 +5,7 @@ from aiogram.filters import CommandStart
 from aiogram.enums.parse_mode import ParseMode
 from langchain_openai import OpenAI
 from apscheduler.triggers.cron import CronTrigger
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from settings.config import *
 from settings.base import get_logger
@@ -87,7 +87,7 @@ async def collect_habr_content():
         logger.info("There is no chat in database")
 
 
-scheduler = BlockingScheduler(timezone="UTC")
+scheduler = AsyncIOScheduler(timezone="UTC")
 trigger = CronTrigger.from_crontab("30 6 * * *")
 scheduler.add_job(collect_habr_content, trigger=trigger)
 scheduler.start()

@@ -1,5 +1,5 @@
-create database postgres;
-\connect postgres;
+create database users;
+\connect users;
 
 create schema if not exists users;
 

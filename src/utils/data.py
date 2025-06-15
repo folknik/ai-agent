@@ -1,6 +1,6 @@
 import requests
 from typing import List
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta, timezone
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from urllib.request import Request, urlopen
@@ -46,7 +46,7 @@ def get_articles_from_last_day() -> List[dict]:
             {
                 'name': name,
                 'link': link,
-                'dt': datetime.fromisoformat(dt)
+                'dt': datetime.fromisoformat(dt).replace(tzinfo=timezone.utc)
             }
         )
     start = datetime.combine(

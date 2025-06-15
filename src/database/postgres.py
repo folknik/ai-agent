@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2 import extras
 from contextlib import closing
+from datetime import datetime
 from typing import List, Tuple, Any
 
 from settings.base import get_logger
@@ -68,8 +69,27 @@ class PostgresDB:
         self._execute_query(
             query=query.format(chat_id=chat_id, user_id=user_id)
         )
-        logger.info("User_data successfully inserted into db.")
+        logger.info("Chat_id successfully inserted into db.")
 
     def get_all_chats(self) -> List[int]:
         query = "SELECT DISTINCT chat_id FROM users.chats;"
         return self._fetchall(query=query)
+
+    def get_all_links_to_article(self) -> List[str]:
+        query = "SELECT DISTINCT link FROM users.articles;"
+        return self._fetchall(query=query)
+
+    def insert_article(self, name: str, link: str, published_datetime: datetime) -> None:
+        query = """
+            INSERT INTO users.articles 
+                (name, link, published_datetime) 
+            SELECT '{name}', '{link}', {published_datetime}
+            WHERE
+                NOT EXISTS (
+                    SELECT id FROM users.chats WHERE link = '{link}'
+                );
+        """
+        self._execute_query(
+            query=query.format(name=name, link=link, published_datetime=published_datetime)
+        )
+        logger.info("Article successfully inserted into db.")

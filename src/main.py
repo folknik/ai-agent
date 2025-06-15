@@ -32,11 +32,11 @@ db = PostgresDB()
 dp = Dispatcher()
 
 
-def run_agent(html_content: str) -> str:
+def run_agent(prompt: str, html_content: str) -> str:
     inputs = [
         {
             "role": "system",
-            "content": PROMPT_TEMPLATE.format(html_content=html_content)
+            "content": prompt.format(html_content=html_content)
         }
     ]
     response = llm.invoke(inputs)
@@ -64,7 +64,7 @@ async def echo_handler(message: Message) -> None:
     logger.info(f"User with user_id \'{message.from_user.id}\' sent new url: \'{url}\'")
     if url.startswith("https:") or url.startswith("http:"):
         html_content = get_content_from_url(url=url)
-        summary = run_agent(html_content=html_content)
+        summary = run_agent(prompt=PROMPT_TEMPLATE, html_content=html_content)
         logger.info(f"AI agent summarized content: \n\'{summary}\'")
         user_data = get_user_data(message=message, url=url)
         db.insert_user_data(user_data=user_data)
@@ -79,10 +79,17 @@ async def collect_habr_content():
     if len(chats) > 0:
         articles = get_articles_from_last_day()
         message = ''
+        links_to_article = db.get_all_links_to_article()
         for article in articles:
-            html_content = get_content_from_url(url=article['link'])
-            summary = run_agent(html_content=html_content)
-            message += f"<a href='{article['link']}'>{article['name']}</a>" + "\n" + summary
+            if article['link'] not in links_to_article:
+                html_content = get_content_from_url(url=article['link'])
+                summary = run_agent(prompt=HABR_PROMPT_TEMPLATE, html_content=html_content)
+                message += f"<a href='{article['link']}'>{article['name']}</a>" + "\n" + summary + "\n\n"
+                db.insert_article(
+                    name=article['name'],
+                    link=article['link'],
+                    published_datetime=article['dt']
+                )
         for chat in chats:
             await bot.send_message(chat_id=chat, text=message, parse_mode=ParseMode.HTML)
     else:

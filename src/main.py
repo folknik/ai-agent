@@ -1,14 +1,14 @@
-import sys
 import asyncio
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.enums.parse_mode import ParseMode
 from langchain_openai import OpenAI
+from apscheduler.triggers.cron import CronTrigger
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 from settings.config import *
 from settings.base import get_logger
-from settings.cron import SCHEDULER, TRIGGER
 from settings.telegram import get_user_data
 from database.postgres import PostgresDB
 from utils.data import get_content_from_url, get_articles_from_last_day
@@ -87,29 +87,17 @@ async def collect_habr_content():
         logger.info("There is no chat in database")
 
 
-def shutdown(*args, **kwargs):
-    if SCHEDULER.running:
-        logger.info("Shutting down scheduler...")
-        SCHEDULER.shutdown()
-    sys.exit()
-
-
-def start_scheduler():
-    logger.info(f'Habr scheduler started.')
-    SCHEDULER.add_job(collect_habr_content, trigger=TRIGGER)
-    try:
-        SCHEDULER.start()
-    except KeyboardInterrupt:
-        SCHEDULER.remove_all_jobs()
-        shutdown()
-
-
 # Run the bot
 async def main() -> None:
+    scheduler = BlockingScheduler(timezone="UTC")
+    trigger = CronTrigger.from_crontab("30 6 * * *")
+    scheduler.add_job(collect_habr_content, trigger=trigger)
+    scheduler.start()
+    logger.info(f'Habr scheduler started.')
+
     logger.info(f"Telegram bot started...")
     await dp.start_polling(bot)
 
 
 if __name__ == '__main__':
-    start_scheduler()
     asyncio.run(main())

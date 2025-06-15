@@ -23,6 +23,7 @@ class PostgresDB:
             pg_conn.commit()
 
     def insert_user_data(self, user_data: dict) -> None:
+        logger.info(f"User data: \n{user_data}")
         query = """
             INSERT INTO users.user_requests (
                   user_id

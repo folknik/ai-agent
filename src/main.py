@@ -76,22 +76,22 @@ async def echo_handler(message: Message) -> None:
 
 async def collect_habr_content():
     chats = db.get_all_chats()
+    logger.info(f'Available chat list: {chats}')
     if len(chats) > 0:
         articles = get_articles_from_last_day()
-        message = ''
         links_to_article = db.get_all_links_to_article()
         for article in articles:
             if article['link'] not in links_to_article:
                 html_content = get_content_from_url(url=article['link'])
                 summary = run_agent(prompt=HABR_PROMPT_TEMPLATE, html_content=html_content)
-                message += f"<a href='{article['link']}'>{article['name']}</a>" + "\n" + summary + "\n\n"
+                message = f"<a href='{article['link']}'>{article['name']}</a>" + "\n" + summary
                 db.insert_article(
                     name=article['name'],
                     link=article['link'],
                     published_datetime=article['dt']
                 )
-        for chat in chats:
-            await bot.send_message(chat_id=chat, text=message, parse_mode=ParseMode.HTML)
+                for chat in chats:
+                    await bot.send_message(chat_id=chat, text=message, parse_mode=ParseMode.HTML)
     else:
         logger.info("There is no chat in database")
 

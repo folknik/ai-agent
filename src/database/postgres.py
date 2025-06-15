@@ -8,16 +8,14 @@ logger = get_logger(__name__)
 
 
 class PostgresDB:
-    conn_params = {
-        'host': 'host.docker.internal',
-        'port': '5432',
-        'user': 'postgres',
-        'password': 'postgres',
-        'dbname': 'postgres'
-    }
-
     def __init__(self):
-        self.conn = psycopg2.connect(**self.conn_params)
+        self.conn_params = {
+            'host': 'db',
+            'port': '5432',
+            'user': 'postgres',
+            'password': 'postgres',
+            'dbname': 'postgres'
+        }
 
     def _execute_query(self, query: str) -> None:
         with closing(psycopg2.connect(**self.conn_params)) as pg_conn, closing(pg_conn.cursor()) as pg_cursor:

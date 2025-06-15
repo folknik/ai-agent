@@ -7,11 +7,11 @@ from langchain_openai import OpenAI
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 
-from config import *
-from utils import get_module_logger
+from settings.config import *
+from utils.base import get_logger
 
 
-logger = get_module_logger(__name__)
+logger = get_logger(__name__)
 
 
 llm = OpenAI(
@@ -37,6 +37,15 @@ def run_agent(html_content: str) -> str:
     return response
 
 
+def get_summary_from_url(url: str) -> str:
+    req = Request(url, headers=HEADERS)
+    with urlopen(req) as response:
+        html = BeautifulSoup(response.read(), 'html.parser')
+        html_content = html.get_text()
+    summary = run_agent(html_content=html_content)
+    return summary
+
+
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
     """
@@ -51,15 +60,10 @@ async def echo_handler(message: Message) -> None:
     Handler handle all message types
     """
     url = message.text
-    logger.info(f"New url: \'{url}\'")
+    user_id = message.from_user.id
+    logger.info(f"User with ser_id \'{user_id}\' sent new url: \'{url}\'")
     if url.startswith("https:") or url.startswith("http:"):
-
-        req = Request(url, headers=HEADERS)
-        with urlopen(req) as response:
-            html = BeautifulSoup(response.read(), 'html.parser')
-            html_content = html.get_text()
-
-        summary = run_agent(html_content=html_content)
+        summary = get_summary_from_url(url=url)
         logger.info(f"AI agent summarized content: \n\'{summary}\'")
         await message.answer(summary)
     else:

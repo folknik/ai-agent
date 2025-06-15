@@ -1,7 +1,7 @@
 import logging
 
 
-def get_module_logger(mod_name):
+def get_logger(mod_name):
     logger = logging.getLogger(mod_name)
     handler = logging.StreamHandler()
     formatter = logging.Formatter(

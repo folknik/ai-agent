@@ -94,7 +94,7 @@ async def main() -> None:
     scheduler = AsyncIOScheduler(timezone="UTC")
     scheduler.add_job(
         func=collect_habr_content,
-        trigger=CronTrigger.from_crontab("30 6 * * *")
+        trigger=CronTrigger.from_crontab("*/5 * * * *")
     )
     scheduler.start()
     await dp.start_polling(bot)

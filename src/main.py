@@ -1,4 +1,6 @@
 import asyncio
+from typing import Tuple
+
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
@@ -49,16 +51,16 @@ def get_summary_from_url(url: str) -> str:
     return summary
 
 
-def get_user_data(user: User, url: str) -> dict:
-    return {
-        'user_id': user.id,
-        'is_bot': user.is_bot,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'username': user.username,
-        'is_premium': user.is_premium,
-        'url': url
-    }
+def get_user_data(user: User, url: str) -> Tuple:
+    return (
+        user.id,
+        user.is_bot,
+        user.first_name,
+        user.last_name,
+        user.username,
+        user.is_premium,
+        url
+    )
 
 
 @dp.message(CommandStart())

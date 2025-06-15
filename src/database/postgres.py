@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2 import extras
 from contextlib import closing
-from typing import Union, List, Tuple, Dict
+from typing import List, Tuple
 
 from utils.base import get_logger
 
@@ -19,12 +19,12 @@ class PostgresDB:
             'dbname': 'users'
         }
 
-    def _execute_batch(self, query: str, records: Union[List[Tuple], List[Dict]]) -> None:
+    def _execute_batch(self, query: str, records: List[Tuple]) -> None:
         with closing(psycopg2.connect(**self.conn_params)) as pg_conn, closing(pg_conn.cursor()) as pg_cursor:
             extras.execute_batch(cur=pg_cursor, sql=query, argslist=records)
             pg_conn.commit()
 
-    def insert_user_data(self, user_data: dict) -> None:
+    def insert_user_data(self, user_data: Tuple) -> None:
         logger.info(f"User data: {user_data}")
         query = """
             INSERT INTO users.user_requests (

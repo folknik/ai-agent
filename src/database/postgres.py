@@ -86,7 +86,7 @@ class PostgresDB:
             SELECT '{name}', '{link}', '{published_datetime}'
             WHERE
                 NOT EXISTS (
-                    SELECT id FROM users.chats WHERE link = '{link}'
+                    SELECT id FROM users.articles WHERE link = '{link}'
                 );
         """
         self._execute_query(

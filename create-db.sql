@@ -1,4 +1,4 @@
-create database if not exists postgres;
+create database postgres;
 \connect postgres;
 
 create schema if not exists users;

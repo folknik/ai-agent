@@ -22,4 +22,13 @@ create table if not exists users.chats (
     chat_id         int8 not null,
     user_id         int8 not null,
     created_at      timestamptz default now() not null
- );
+);
+
+
+create table if not exists users.articles (
+    id                     serial primary key,
+    name                   varchar not null,
+    link                   varchar not null,
+    published_datetime     timestamptz not null,
+    created_at             timestamptz default now() not null
+);

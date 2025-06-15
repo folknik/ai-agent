@@ -54,7 +54,7 @@ class PostgresDB:
             query=query,
             records=[user_data]
         )
-        logger.info("User_data successfully inserted into db.")
+        logger.info(f"User_data with {user_data[0]} user_id successfully inserted into db.")
 
     def insert_chat_id(self, chat_id: int, user_id: int) -> None:
         query = """
@@ -69,7 +69,7 @@ class PostgresDB:
         self._execute_query(
             query=query.format(chat_id=chat_id, user_id=user_id)
         )
-        logger.info("Chat_id successfully inserted into db.")
+        logger.info(f"Chat_id {chat_id} successfully inserted into db.")
 
     def get_all_chats(self) -> List[Tuple[int]]:
         query = "SELECT DISTINCT chat_id FROM users.chats;"
@@ -92,4 +92,4 @@ class PostgresDB:
         self._execute_query(
             query=query.format(name=name, link=link, published_datetime=published_datetime)
         )
-        logger.info("Article successfully inserted into db.")
+        logger.info(f"Article with {link} link successfully inserted into db.")

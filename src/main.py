@@ -86,7 +86,7 @@ async def collect_habr_content():
             if article['link'] not in links_to_article:
                 html_content = get_content_from_url(url=article['link'])
                 summary = run_agent(prompt=HABR_PROMPT_TEMPLATE, html_content=html_content)
-                message = f"<a href='{article['link']}'>{article['name']}</a>" + "\n" + summary
+                message = f"<a href='{article['link']}'>{article['name']}</a>" + "\n\n" + summary
                 db.insert_article(
                     name=article['name'],
                     link=article['link'],

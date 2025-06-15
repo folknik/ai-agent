@@ -91,14 +91,13 @@ async def collect_habr_content():
 
 # Run the bot
 async def main() -> None:
-    logger.info(f"Telegram bot started...")
-    await dp.start_polling(bot)
-
-
-if __name__ == '__main__':
     scheduler.add_job(
         func=collect_habr_content,
         trigger=CronTrigger.from_crontab("30 6 * * *")
     )
-    scheduler.start()
+    await scheduler.start()
+    await dp.start_polling(bot)
+
+
+if __name__ == '__main__':
     asyncio.run(main())

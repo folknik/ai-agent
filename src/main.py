@@ -87,14 +87,14 @@ async def collect_habr_content():
         logger.info("There is no chat in database")
 
 
+scheduler = BlockingScheduler(timezone="UTC")
+trigger = CronTrigger.from_crontab("30 6 * * *")
+scheduler.add_job(collect_habr_content, trigger=trigger)
+scheduler.start()
+
+
 # Run the bot
 async def main() -> None:
-    scheduler = BlockingScheduler(timezone="UTC")
-    trigger = CronTrigger.from_crontab("30 6 * * *")
-    scheduler.add_job(collect_habr_content, trigger=trigger)
-    scheduler.start()
-    logger.info(f'Habr scheduler started.')
-
     logger.info(f"Telegram bot started...")
     await dp.start_polling(bot)
 

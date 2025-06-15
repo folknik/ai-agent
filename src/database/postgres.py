@@ -25,7 +25,7 @@ class PostgresDB:
             pg_conn.commit()
 
     def insert_user_data(self, user_data: dict) -> None:
-        logger.info(f"User data: \n{user_data}")
+        logger.info(f"User data: {user_data}")
         query = """
             INSERT INTO users.user_requests (
                   user_id
@@ -38,7 +38,7 @@ class PostgresDB:
             ) VALUES (%s,%s,%s,%s,%s,%s,%s);
         """
         self._execute_batch(
-            query=query.format(**user_data),
+            query=query,
             records=[user_data]
         )
         logger.info("User_data successfully inserted into db.")

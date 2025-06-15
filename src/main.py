@@ -96,9 +96,9 @@ async def main() -> None:
 
 
 if __name__ == '__main__':
-    scheduler.start()
     scheduler.add_job(
         func=collect_habr_content,
         trigger=CronTrigger.from_crontab("30 6 * * *")
     )
+    scheduler.start()
     asyncio.run(main())

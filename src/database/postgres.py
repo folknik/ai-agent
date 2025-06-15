@@ -14,7 +14,7 @@ class PostgresDB:
             'port': '5432',
             'user': 'postgres',
             'password': 'postgres',
-            'dbname': 'postgres'
+            'dbname': 'users'
         }
 
     def _execute_query(self, query: str) -> None:

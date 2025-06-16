@@ -82,19 +82,19 @@ async def collect_habr_content():
         articles = get_articles_from_last_day()
         links_to_article = db.get_all_links_to_article()
         links_to_article = [link[0] for link in links_to_article]
-        if len(articles) > 0:
-            for article in articles:
-                if article['link'] not in links_to_article:
-                    html_content = get_content_from_url(url=article['link'])
-                    summary = run_agent(prompt=HABR_PROMPT_TEMPLATE, html_content=html_content)
-                    message = f"<a href='{article['link']}'>{article['name']}</a>" + "\n\n" + summary
-                    db.insert_article(
-                        name=article['name'],
-                        link=article['link'],
-                        published_datetime=article['dt']
-                    )
-                    for chat in chats:
-                        await bot.send_message(chat_id=chat, text=message, parse_mode=ParseMode.HTML)
+        filtered_articles = [art for art in articles if art['link'] not in links_to_article]
+        if len(filtered_articles) > 0:
+            for article in filtered_articles:
+                html_content = get_content_from_url(url=article['link'])
+                summary = run_agent(prompt=HABR_PROMPT_TEMPLATE, html_content=html_content)
+                message = f"<a href='{article['link']}'>{article['name']}</a>" + "\n\n" + summary
+                db.insert_article(
+                    name=article['name'],
+                    link=article['link'],
+                    published_datetime=article['dt']
+                )
+                for chat in chats:
+                    await bot.send_message(chat_id=chat, text=message, parse_mode=ParseMode.HTML)
         else:
             logger.info("There are no new articles")
     else:

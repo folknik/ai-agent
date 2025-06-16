@@ -3,7 +3,6 @@ version: '3'
 services:
   db:
     image: postgres:15
-    restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -12,6 +11,12 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
       - ./create-db.sql:/docker-entrypoint-initdb.d/create_database.sql
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "airflow" ]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
 
   telegram_app:
     container_name: telegram_ai_agent
@@ -22,3 +27,6 @@ services:
     restart: always
     env_file:
       - variables.env
+    depends_on:
+      db:
+        condition: service_healthy

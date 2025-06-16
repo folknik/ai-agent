@@ -82,7 +82,7 @@ async def collect_habr_content():
         articles = get_articles_from_last_day()
         links_to_article = db.get_all_links_to_article()
         links_to_article = [link[0] for link in links_to_article]
-        if len(links_to_article) > 0:
+        if len(articles) > 0:
             for article in articles:
                 if article['link'] not in links_to_article:
                     html_content = get_content_from_url(url=article['link'])
@@ -102,7 +102,7 @@ async def collect_habr_content():
 
 
 # Run the bot
-async def amain() -> None:
+async def main() -> None:
     scheduler = AsyncIOScheduler(timezone="UTC")
     scheduler.add_job(
         func=collect_habr_content,
@@ -115,5 +115,5 @@ async def amain() -> None:
 if __name__ == '__main__':
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    loop.run_until_complete(amain())
+    loop.run_until_complete(main())
     loop.run_forever()

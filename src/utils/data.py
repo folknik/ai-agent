@@ -54,4 +54,4 @@ def get_articles_from_last_day() -> List[dict]:
         time=datetime.min.time()
     )
     end = datetime.now()
-    return [art for art in articles if start <= art['dt'] < end]
+    return [art for art in articles if start <= art['dt'] < end][::-1]

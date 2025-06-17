@@ -16,7 +16,8 @@ async def main() -> None:
     scheduler = AsyncIOScheduler(timezone="UTC")
     scheduler.add_job(
         func=send_new_articles,
-        trigger=CronTrigger.from_crontab("*/5 * * * *")
+        trigger=CronTrigger.from_crontab("*/5 * * * *"),
+        kwargs={'bot': bot}
     )
     scheduler.start()
 

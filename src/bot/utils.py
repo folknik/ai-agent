@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from aiogram.enums.parse_mode import ParseMode
+from aiogram import Bot
 from aiogram.types import Message
+from aiogram.enums.parse_mode import ParseMode
 
-from main import bot
 from settings.config import *
 from database.postgres import db
 from core.agent import run_agent
@@ -13,7 +13,7 @@ from parser.parser import get_content_from_url, get_articles_from_last_day
 logger = get_logger(__name__)
 
 
-async def send_new_articles():
+async def send_new_articles(bot: Bot) -> None:
     chats = db.get_all_chats()
     chats = [chat[0] for chat in chats]
     logger.info(f'Available chat list: {chats}')

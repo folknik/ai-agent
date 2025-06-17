@@ -1,17 +1,26 @@
 import asyncio
+from aiogram import Bot, Dispatcher
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from core.bot import bot, dp, collect_habr_content
+from bot.handlers import router
+from settings.config import TOKEN
+from bot.utils import send_new_articles
+
+
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
 
 
 async def main() -> None:
     scheduler = AsyncIOScheduler(timezone="UTC")
     scheduler.add_job(
-        func=collect_habr_content,
+        func=send_new_articles,
         trigger=CronTrigger.from_crontab("*/5 * * * *")
     )
     scheduler.start()
+
+    dp.include_router(router)
     await dp.start_polling(bot)
 
 

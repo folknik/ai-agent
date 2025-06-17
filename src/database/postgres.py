@@ -93,3 +93,6 @@ class PostgresDB:
             query=query.format(name=name, link=link, published_datetime=published_datetime)
         )
         logger.info(f"Article with {link} link successfully inserted into db.")
+
+
+db = PostgresDB()

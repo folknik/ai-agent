@@ -1,8 +1,8 @@
 import requests
 from typing import List
-from datetime import datetime, timedelta, timezone
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
+from datetime import datetime, timedelta
 from urllib.request import Request, urlopen
 
 from settings.config import *

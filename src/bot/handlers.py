@@ -2,12 +2,13 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import CommandStart
 
-from settings.config import *
 from database.postgres import db
 from core.agent import run_agent
-from settings.base import get_logger
+from settings.logger import get_logger
 from bot.utils import get_user_data
-from parser.parser import get_content_from_url
+from parsers.habr_parser import get_content_from_url
+from prompts.summary_agent_prompt import PROMPT_TEMPLATE
+
 
 logger = get_logger(__name__)
 

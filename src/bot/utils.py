@@ -2,11 +2,11 @@ from typing import Tuple
 from aiogram import Bot
 from aiogram.types import Message
 
-from settings.config import *
 from database.postgres import db
 from core.agent import run_agent
-from settings.base import get_logger
-from parser.parser import get_content_from_url, get_articles_from_last_day
+from settings.logger import get_logger
+from prompts.summary_agent_prompt import PROMPT_TEMPLATE
+from parsers.habr_parser import get_content_from_url, get_articles_from_last_day
 
 
 logger = get_logger(__name__)

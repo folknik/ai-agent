@@ -5,9 +5,9 @@ from aiogram.client.default import DefaultBotProperties
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from bot.handlers import router
-from settings.base import get_logger
 from settings.config import TOKEN
+from settings.logger import get_logger
+from bot.handlers import router
 from bot.utils import send_new_articles
 
 

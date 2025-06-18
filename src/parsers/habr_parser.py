@@ -10,7 +10,10 @@ from settings.config import HABR_URL
 
 def get_content_from_url(url: str) -> str:
     ua = UserAgent()
-    headers = {'User-Agent': ua.google}
+    headers = {
+        'accept': 'application/json, text/plain, */*',
+        'User-Agent': ua.google
+    }
     req = Request(url=url, headers=headers)
     with urlopen(req) as response:
         html = BeautifulSoup(response.read(), 'html.parser')

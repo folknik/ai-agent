@@ -4,7 +4,7 @@ from contextlib import closing
 from datetime import datetime
 from typing import List, Tuple, Any, Dict
 
-from settings.base import get_logger
+from settings.logger import get_logger
 from settings.config import PG_CONN_PARAMS
 
 

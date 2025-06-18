@@ -1,14 +1,13 @@
 from typing import Tuple
-
 from aiogram import Bot
 from aiogram.types import Message
-from aiogram.enums.parse_mode import ParseMode
 
 from settings.config import *
 from database.postgres import db
 from core.agent import run_agent
 from settings.base import get_logger
 from parser.parser import get_content_from_url, get_articles_from_last_day
+
 
 logger = get_logger(__name__)
 
@@ -27,7 +26,7 @@ async def send_new_articles(bot: Bot) -> None:
                 html_content = get_content_from_url(url=article['link'])
                 summary = run_agent(
                     prompt=PROMPT_TEMPLATE,
-                    paragraph_count='3 обзацах',
+                    paragraph_count='1 обзаце',
                     html_content=html_content
                 )
                 message = f"<a href='{article['link']}'>{article['name']}</a>" + "\n\n" + summary
@@ -37,7 +36,7 @@ async def send_new_articles(bot: Bot) -> None:
                     published_datetime=article['dt']
                 )
                 for chat in chats:
-                    await bot.send_message(chat_id=chat, text=message, parse_mode=ParseMode.HTML)
+                    await bot.send_message(chat_id=chat, text=message)
         else:
             logger.info("There are no new articles")
     else:

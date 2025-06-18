@@ -37,7 +37,7 @@ async def echo_handler(message: Message) -> None:
         html_content = get_content_from_url(url=url)
         summary = run_agent(
             prompt=PROMPT_TEMPLATE,
-            paragraph_count='1 обзаце',
+            paragraph_count='3 обзацах',
             html_content=html_content
         )
         logger.info(f"AI agent summarized content: \n\'{summary}\'")

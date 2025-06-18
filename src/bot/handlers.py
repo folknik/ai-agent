@@ -23,7 +23,7 @@ async def command_start_handler(message: Message) -> None:
     user_id = message.from_user.id
     db.insert_chat_id(chat_id, user_id)
     logger.info(f"New user with user_id \'{user_id}\' request the bot from \'{chat_id}\' chat_id")
-    await message.answer(f"Hello, I'm your AI assistant! I'll send you  a summary of new Habr articles.")
+    await message.answer(f"Hello, I'm your AI assistant! I'll send you a summary of new Habr articles.")
 
 
 @router.message()

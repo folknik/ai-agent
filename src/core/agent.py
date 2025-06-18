@@ -12,11 +12,14 @@ llm = OpenAI(
 )
 
 
-def run_agent(prompt: str, html_content: str) -> str:
+def run_agent(prompt: str, paragraph_count: str, html_content: str) -> str:
     inputs = [
         {
             "role": "system",
-            "content": prompt.format(html_content=html_content)
+            "content": prompt.format(
+                paragraph_count=paragraph_count,
+                html_content=html_content
+            )
         }
     ]
     response = llm.invoke(inputs)

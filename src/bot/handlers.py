@@ -35,7 +35,11 @@ async def echo_handler(message: Message) -> None:
     logger.info(f"User with user_id \'{message.from_user.id}\' sent new url: \'{url}\'")
     if url.startswith("https:") or url.startswith("http:"):
         html_content = get_content_from_url(url=url)
-        summary = run_agent(prompt=PROMPT_TEMPLATE, html_content=html_content)
+        summary = run_agent(
+            prompt=PROMPT_TEMPLATE,
+            paragraph_count='1 обзаце',
+            html_content=html_content
+        )
         logger.info(f"AI agent summarized content: \n\'{summary}\'")
         user_data = get_user_data(message=message, url=url)
         db.insert_user_data(user_data=user_data)

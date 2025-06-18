@@ -25,7 +25,11 @@ async def send_new_articles(bot: Bot) -> None:
         if len(filtered_articles) > 0:
             for article in filtered_articles:
                 html_content = get_content_from_url(url=article['link'])
-                summary = run_agent(prompt=HABR_PROMPT_TEMPLATE, html_content=html_content)
+                summary = run_agent(
+                    prompt=PROMPT_TEMPLATE,
+                    paragraph_count='3 обзацах',
+                    html_content=html_content
+                )
                 message = f"<a href='{article['link']}'>{article['name']}</a>" + "\n\n" + summary
                 db.insert_article(
                     name=article['name'],

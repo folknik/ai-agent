@@ -35,3 +35,11 @@ HTML Content:
 
 Ответ:
 """
+
+PG_CONN_PARAMS = {
+    'host': 'db',
+    'port': '5432',
+    'user': 'postgres',
+    'password': 'postgres',
+    'dbname': 'users'
+}

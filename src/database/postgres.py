@@ -2,23 +2,18 @@ import psycopg2
 from psycopg2 import extras
 from contextlib import closing
 from datetime import datetime
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Dict
 
 from settings.base import get_logger
+from settings.config import PG_CONN_PARAMS
 
 
 logger = get_logger(__name__)
 
 
 class PostgresDB:
-    def __init__(self):
-        self.conn_params = {
-            'host': 'db',
-            'port': '5432',
-            'user': 'postgres',
-            'password': 'postgres',
-            'dbname': 'users'
-        }
+    def __init__(self, conn_params: Dict[str, str]):
+        self.conn_params = conn_params
 
     def _execute_query(self, query: str) -> None:
         with closing(psycopg2.connect(**self.conn_params)) as pg_conn, closing(pg_conn.cursor()) as pg_cursor:
@@ -95,4 +90,4 @@ class PostgresDB:
         logger.info(f"Article with {link} link successfully inserted into db.")
 
 
-db = PostgresDB()
+db = PostgresDB(PG_CONN_PARAMS)

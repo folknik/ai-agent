@@ -10,7 +10,7 @@ TOKEN = os.getenv("BOT_TOKEN")
 
 
 # Language Model Configuration
-LLM_MODEL = "gpt-4.1-mini"
+LLM_MODEL = "gpt-4o-mini"
 LLM_TEMPERATURE = 0.1
 LLM_MAX_TOKENS = 500
 LLM_MAX_RETRIES = 0

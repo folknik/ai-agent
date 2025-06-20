@@ -8,7 +8,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from settings.config import TOKEN
 from settings.logger import get_logger
 from bot.handlers import router
-from bot.utils import send_new_articles
+from bot.utils import ask_latest_articles
 
 
 logger = get_logger(__name__)
@@ -21,7 +21,7 @@ dp = Dispatcher()
 async def main() -> None:
     scheduler = AsyncIOScheduler(timezone="UTC")
     scheduler.add_job(
-        func=send_new_articles,
+        func=ask_latest_articles,
         trigger=CronTrigger.from_crontab("*/5 * * * *"),
         kwargs={'bot': bot}
     )

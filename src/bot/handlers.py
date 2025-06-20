@@ -7,7 +7,6 @@ from core.agent import run_agent
 from settings.logger import get_logger
 from bot.utils import get_user_data
 from parsers.habr_parser import get_content_from_url
-from prompts.summary_agent_prompt import PROMPT_TEMPLATE
 
 
 logger = get_logger(__name__)
@@ -36,11 +35,7 @@ async def echo_handler(message: Message) -> None:
     logger.info(f"User with user_id \'{message.from_user.id}\' sent new url: \'{url}\'")
     if url.startswith("https:") or url.startswith("http:"):
         html_content = get_content_from_url(url=url)
-        summary = run_agent(
-            prompt=PROMPT_TEMPLATE,
-            paragraph_count='3 обзацах',
-            html_content=html_content
-        )
+        summary = run_agent(html_content=html_content)
         logger.info(f"AI agent summarized content: \n\'{summary}\'")
         user_data = get_user_data(message=message, url=url)
         db.insert_user_data(user_data=user_data)
